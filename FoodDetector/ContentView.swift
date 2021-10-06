@@ -16,39 +16,54 @@ struct ContentView: View {
     @State var password: String = ""
     
     @State var authenticationDidFail: Bool = false
-    @State var authenticationDidSucceed: Bool = true
+    @State var authenticationDidSucceed: Bool = false
     
     var body: some View {
+        NavigationView{
         VStack {
             TitleText()
-            
+        
             HStack{
                 VStack{
                     UsernameTextField(username: $username)
                     PasswordSecureField(password: $password)
-                }
+                } // End VStack
                 .padding()
-               
-                Button(action: {
-                    if self.username == storedUsername && self.password == storedPassword{
-                        self.authenticationDidSucceed = true
-                    } else {
-                        self.authenticationDidFail = true
-                    }
-                }) {
-                    LoginButtonContent()
-                }
-            }
+                
+                NavigationLink(
+                    destination: HomeView(),
+                    isActive: .constant(self.authenticationDidSucceed == true),
+                    label: {
+                        Button(action: {
+                            if self.username == storedUsername && self.password == storedPassword{
+                                self.authenticationDidSucceed = true
+                            } else {
+                                
+                                self.authenticationDidFail = true
+                            }
+                        }) {
+                            LoginButtonContent()
+                        }
+                    })
+            } // End HStack
             
             if authenticationDidFail {
                 Text("Information not correct. Try Again.")
                     .offset(y: -10)
                     .foregroundColor(.red)
-            }
-        }
+            } // End authenticationDidFail
+            
+            HStack{
+                Text("회원가입")
+                Text("아이디 / 비밀번호 찾기")
+            } // End HStack
+            .navigationBarHidden(true)
+        } // End VStack
         .padding()
+
         if authenticationDidSucceed {
             Text("Login succeeded!")
+        }
         }
     }
 }

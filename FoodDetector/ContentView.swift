@@ -54,8 +54,10 @@ struct ContentView: View {
             } // End authenticationDidFail
             
             HStack{
-                Text("회원가입")
-                Text("아이디 / 비밀번호 찾기")
+                NavigationLink(destination: SignupView()){
+                    SmallButton1()
+                }
+                SmallButton2()
             } // End HStack
             .navigationBarHidden(true)
         } // End VStack
@@ -120,5 +122,29 @@ struct PasswordSecureField: View {
             .background(Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))
             .cornerRadius(5.0)
             .padding(.bottom, 20)
+    }
+}
+
+struct SmallButton1: View {
+    var body: some View {
+        Text("회원가입")
+            .font(.footnote)
+            .foregroundColor(.white)
+            .padding()
+            .frame(height:30)
+            .background(Color(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)))
+            .cornerRadius(11.0)
+    }
+}
+
+struct SmallButton2: View {
+    var body: some View {
+        Text("아이디/비밀번호 찾기")
+            .font(.footnote)
+            .foregroundColor(.white)
+            .padding()
+            .frame(height:30)
+            .background(Color(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1)))
+            .cornerRadius(11.0)
     }
 }

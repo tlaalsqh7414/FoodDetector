@@ -14,6 +14,7 @@
 		84110270270D4873008FE8DC /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8411026F270D4873008FE8DC /* Preview Assets.xcassets */; };
 		84110273270D4873008FE8DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84110271270D4873008FE8DC /* LaunchScreen.storyboard */; };
 		8411027B270D6D5D008FE8DC /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411027A270D6D5D008FE8DC /* HomeView.swift */; };
+		8411027D271096EC008FE8DC /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411027C271096EC008FE8DC /* SignupView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		84110272270D4873008FE8DC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		84110274270D4873008FE8DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8411027A270D6D5D008FE8DC /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		8411027C271096EC008FE8DC /* SignupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 				84110266270D486E008FE8DC /* AppDelegate.swift */,
 				84110268270D486E008FE8DC /* SceneDelegate.swift */,
 				8411026A270D486E008FE8DC /* ContentView.swift */,
+				8411027C271096EC008FE8DC /* SignupView.swift */,
 				8411027A270D6D5D008FE8DC /* HomeView.swift */,
 				8411026C270D4873008FE8DC /* Assets.xcassets */,
 				84110271270D4873008FE8DC /* LaunchScreen.storyboard */,
@@ -152,6 +155,7 @@
 				8411027B270D6D5D008FE8DC /* HomeView.swift in Sources */,
 				84110269270D486E008FE8DC /* SceneDelegate.swift in Sources */,
 				8411026B270D486E008FE8DC /* ContentView.swift in Sources */,
+				8411027D271096EC008FE8DC /* SignupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

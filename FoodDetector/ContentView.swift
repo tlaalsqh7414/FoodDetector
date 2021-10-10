@@ -31,7 +31,7 @@ struct ContentView: View {
                 .padding()
                 
                 NavigationLink(
-                    destination: HomeView(),
+                    destination: TabDesignView(),
                     isActive: .constant(self.authenticationDidSucceed == true),
                     label: {
                         Button(action: {

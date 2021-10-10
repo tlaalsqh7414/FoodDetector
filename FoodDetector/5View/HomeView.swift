@@ -10,11 +10,15 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         NavigationView {
-            Text("Hello")
+            Text("HOME")
                 .navigationTitle("Home View")
-                .navigationBarTitle("ViewControler")
+                .navigationBarTitle("HomeViewBar")
         }
-        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
+        .tabItem{
+            Text("Home")
+            Image(systemName: "eye")
+        }
     }
 }
 

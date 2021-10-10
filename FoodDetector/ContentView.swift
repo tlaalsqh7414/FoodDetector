@@ -38,7 +38,6 @@ struct ContentView: View {
                         label: {
                             Button(action: {
                                 check_user(username, password)
-                                
                             }) {
                                 LoginButtonContent()
                             }

@@ -9,6 +9,7 @@ import SwiftUI
 
 
 struct Response: Codable{
+    var status_code: Int?
     var msg: String?
 }
 
@@ -82,15 +83,8 @@ struct ContentView: View {
         URLSession.shared.dataTask(with: request) { data, response, error in
             let result = try! JSONDecoder().decode(Response.self, from: data!)
             
-            if result.msg == "로그인 성공" {
-                self.authenticationDidSucceed = 1
-            }
-            else if result.msg == "ID가 없습니다." {
-                self.authenticationDidSucceed = 2
-            }
-            else if result.msg == "비밀번호가 틀렸습니다." {
-                self.authenticationDidSucceed = 3
-            }
+            print(result.msg!)
+            self.authenticationDidSucceed = result.status_code!
         }.resume()
          
     }

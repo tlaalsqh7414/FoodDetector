@@ -81,7 +81,6 @@ struct ContentView: View {
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             let result = try! JSONDecoder().decode(Response.self, from: data!)
-            
             print(result.msg!)
             self.authenticationDidSucceed = result.status_code!
         }.resume()

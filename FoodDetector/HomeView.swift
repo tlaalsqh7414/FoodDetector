@@ -13,8 +13,8 @@ struct HomeView: View {
             Text("Hello")
                 .navigationTitle("Home View")
                 .navigationBarTitle("ViewControler")
-                
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 

@@ -7,66 +7,86 @@
 
 import SwiftUI
 
-let storedUsername = "20161557"
-let storedPassword = "abcabc"
+
+struct Response: Codable{
+    var status_code: Int?
+    var msg: String?
+}
 
 struct ContentView: View {
     
     @State var username: String = ""
     @State var password: String = ""
     
-    @State var authenticationDidFail: Bool = false
-    @State var authenticationDidSucceed: Bool = false
+    @State var authenticationDidSucceed: Int = 0
     
     var body: some View {
         NavigationView{
-        VStack {
-            TitleText()
-        
-            HStack{
-                VStack{
-                    UsernameTextField(username: $username)
-                    PasswordSecureField(password: $password)
-                } // End VStack
-                .padding()
-                
-                NavigationLink(
-                    destination: HomeView(),
-                    isActive: .constant(self.authenticationDidSucceed == true),
-                    label: {
-                        Button(action: {
-                            if self.username == storedUsername && self.password == storedPassword{
-                                self.authenticationDidSucceed = true
-                            } else {
+            VStack {
+                TitleText()
+            
+                HStack{
+                    VStack{
+                        UsernameTextField(username: $username)
+                        PasswordSecureField(password: $password)
+                    } // End VStack
+                    .padding()
+                    
+                    NavigationLink(
+                        destination: HomeView(),
+                        isActive: .constant(self.authenticationDidSucceed == 1),
+                        label: {
+                            Button(action: {
+                                check_user(username, password)
                                 
-                                self.authenticationDidFail = true
+                            }) {
+                                LoginButtonContent()
                             }
-                        }) {
-                            LoginButtonContent()
-                        }
-                    })
-            } // End HStack
-            
-            if authenticationDidFail {
-                Text("Information not correct. Try Again.")
-                    .offset(y: -10)
-                    .foregroundColor(.red)
-            } // End authenticationDidFail
-            
-            HStack{
-                NavigationLink(destination: SignupView()){
-                    SmallButton1()
+                        })
+                } // End HStack
+                
+                if authenticationDidSucceed == 2 {
+                    Text("존재하지 않는 아이디입니다.")
+                        .offset(y: -10)
+                        .foregroundColor(.red)
                 }
-                SmallButton2()
-            } // End HStack
-            .navigationBarHidden(true)
-        } // End VStack
-        .padding()
-
-        if authenticationDidSucceed {
-            Text("Login succeeded!")
+                else if authenticationDidSucceed == 3 {
+                    Text("잘못된 비밀번호입니다.")
+                        .offset(y: -10)
+                        .foregroundColor(.red)
+                }
+                
+                HStack{
+                    NavigationLink(destination: SignupView()){
+                        SmallButton1()
+                    }
+                    SmallButton2()
+                } // End HStack
+                .navigationBarHidden(true)
+            } // End VStack
+            .padding()
         }
+    }
+    
+    func check_user(_ id: String, _ pwd: String) {
+        guard let url = URL(string: "http://13.125.238.168:8000/account/app_login") else {
+            print("Invalid url")
+            return
         }
+        var request = URLRequest(url: url)
+        let params = try! JSONSerialization.data(withJSONObject: ["id":id, "passwd":pwd], options: [])
+        
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = params
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            let result = try! JSONDecoder().decode(Response.self, from: data!)
+            
+            print(result.msg!)
+            self.authenticationDidSucceed = result.status_code!
+        }.resume()
+         
     }
 }
 
@@ -109,6 +129,8 @@ struct UsernameTextField: View {
             .background(Color(#colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)))
             .cornerRadius(5.0)
             .padding(.bottom, 20)
+            .disableAutocorrection(true)
+            .autocapitalization(.none)
     }
 }
 

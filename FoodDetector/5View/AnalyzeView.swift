@@ -9,16 +9,7 @@ import SwiftUI
 
 struct AnalyzeView: View {
     var body: some View {
-        NavigationView {
-            Text("ANALYZE")
-                .navigationTitle("Analyze View")
-                .navigationBarTitle("AnalyzeViewBar")
-        }
-        .navigationBarHidden(true)
-        .tabItem{
-            Text("ANALYZE")
-            Image(systemName: "doc.text.below.ecg")
-        }
+        Text("ANALYZE")
     }
 }
 

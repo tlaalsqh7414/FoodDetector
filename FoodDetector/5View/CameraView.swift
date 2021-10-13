@@ -9,16 +9,7 @@ import SwiftUI
 
 struct CameraView: View {
     var body: some View {
-        NavigationView {
-            Text("CAMERA")
-                .navigationTitle("Camera View")
-                .navigationBarTitle("CameraViewBar")
-        }
-        .navigationBarHidden(true)
-        .tabItem{
-            Text("CAMERA")
-            Image(systemName: "camera")
-        }
+        Text("CAMERA")
     }
 }
 

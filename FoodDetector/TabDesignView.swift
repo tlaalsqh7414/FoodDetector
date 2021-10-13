@@ -11,11 +11,37 @@ struct TabDesignView: View {
     var body: some View {
         TabView{
             HomeView()
+                .tabItem{
+                    Text("Home")
+                    Image(systemName: "eye")
+                }
+                .navigationBarHidden(true)
             AnalyzeView()
+                .tabItem{
+                    Text("ANALYZE")
+                    Image(systemName: "doc.text.below.ecg")
+                }
+                .navigationBarHidden(true)
             CameraView()
+                .tabItem{
+                    Text("CAMERA")
+                    Image(systemName: "camera")
+                }
+                .navigationBarHidden(true)
             CommunityView()
+                .tabItem{
+                    Text("COMMUNITY")
+                    Image(systemName: "person.2.circle")
+                }
+                .navigationBarHidden(true)
             ProfileView()
+                .tabItem{
+                    Text("PROFILE")
+                    Image(systemName: "person.circle")}
+                .navigationBarHidden(true)
         }
+        .navigationBarHidden(true)
+        .navigationBarBackButtonHidden(true)
     }
 }
 

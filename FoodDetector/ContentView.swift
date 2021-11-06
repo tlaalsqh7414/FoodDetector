@@ -68,7 +68,7 @@ struct ContentView: View {
     }
     
     func check_user(_ id: String, _ pwd: String) {
-        guard let url = URL(string: "http://13.125.238.168:8000/account/app_login") else {
+        guard let url = URL(string: "http://3.36.103.81:80/account/app_login") else {
             print("Invalid url")
             return
         }

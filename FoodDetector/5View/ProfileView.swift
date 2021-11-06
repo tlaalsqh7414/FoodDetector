@@ -7,8 +7,15 @@
 
 import SwiftUI
 
+
+struct ProfileImg: Codable{
+    var img: [String]
+}
+
+ 
 struct ProfileView: View {
     @State var selectedTab: String = "square.grid.3x3"
+    @State var imgList: [String] = []
     @Namespace var animation
     
     var body: some View {
@@ -25,7 +32,11 @@ struct ProfileView: View {
                         .padding(2)
                         .background(Color.white)
                         .clipShape(Circle())
-                    
+                    /*
+                        .onAppear(perform: {
+                            get_imgs_list("user0001")
+                        })
+                    */
                     VStack{
                         Text("199")
                             .font(.title2)
@@ -62,7 +73,7 @@ struct ProfileView: View {
                         .fontWeight(.semibold)
                         .foregroundColor(.gray)
                     
-                    Text("content2.. dksdudgktpdy. sjan whfflspdy. ekemf glasotpdy. ghkdlxld")
+                    Text("사용자 소개가 들어가는 부분입니다.                          ")
                     
                     HStack{
                         Button(action: {}, label: {
@@ -113,7 +124,6 @@ struct ProfileView: View {
             
             ScrollView(.vertical, showsIndicators: false, content: {
                 if selectedTab == "square.grid.3x3" {
-                    Text("Select1")
                     // TODO: 지금까지 올린 식단 Grid 표시
                 }
                 else{
@@ -123,6 +133,39 @@ struct ProfileView: View {
             })
             
         }
+    }
+    
+    func get_imgs_list(_ id: String) {
+        guard let url = URL(string: "http://3.36.103.81:80/account/profile_meal") else {
+            print("Invalid url")
+            return
+        }
+        var request = URLRequest(url: url)
+        let params = try! JSONSerialization.data(withJSONObject: ["id":id], options: [])
+        
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = params
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            let result = try! JSONDecoder().decode(ProfileImg.self, from: data!)
+            imgList = result.img
+        }.resume()
+         
+    }
+    
+    func load_img(_ name: String) -> UIImage {
+        do{
+            guard let url = URL(string: "http://3.36.103.81:80/images/\(name)") else{
+                return UIImage()
+            }
+            
+            let data: Data = try Data(contentsOf: url)
+            
+            return UIImage(data: data) ?? UIImage()
+        } catch{
+        }
+        return UIImage()
     }
 }
 

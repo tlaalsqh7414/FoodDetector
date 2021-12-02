@@ -6,10 +6,87 @@
 //
 
 import SwiftUI
+import AVFoundation
 
 struct CameraView: View {
+    
+    @StateObject var camera = CameraModel()
+    
     var body: some View {
-        Text("CAMERA")
+        ZStack{
+            //goint to be camera preview..
+            CameraPreview(camera: camera)
+                .ignoresSafeArea(.all, edges: .all)
+            
+            VStack{
+                
+                if camera.isTaken{
+                    
+                    HStack {
+                        Spacer()
+                        
+                        Button(action: camera.reTake, label: {
+                            Image(systemName:"arrow.triangle.2.circlepath.camera")
+                                .foregroundColor(.black)
+                                .padding()
+                                .background(Color.white)
+                                .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+                            
+                        })
+                        .padding(.leading,10)
+                    }
+                    
+                    Spacer()
+                    
+                }
+                
+                
+                Spacer()
+                
+                HStack{
+                    
+                    // if taken showing save and again take button..
+                    
+                    if camera.isTaken{
+                        
+                        Button(action: {if !camera.isSaved{camera.savePic()}}, label: {
+                            Text(camera.isSaved ? "Saved":"Save")
+                                .foregroundColor(.black)
+                                .fontWeight(.semibold)
+                                .padding(.vertical,10)
+                                .padding(.horizontal,20)
+                                .background(Color.white)
+                                .clipShape(Capsule())
+                        })
+                        .padding(.leading,10)
+                        
+                        Spacer()
+                        
+                    }
+                    else{
+                        Button(action: camera.takePic, label: {
+                            
+                            ZStack{
+                                
+                                Circle()
+                                    .fill(Color.white)
+                                    .frame(width: 60, height: 60)
+                                
+                                Circle()
+                                    .stroke(Color.white, lineWidth: 2)
+                                    .frame(width: 70, height: 70)
+                            }
+                        })
+                    }
+
+                }
+                .frame(height:75)
+            }
+        }
+        .onAppear(perform: {
+            camera.Check()
+        })
+    
     }
 }
 
@@ -18,3 +95,182 @@ struct CameraView_Previews: PreviewProvider {
         CameraView()
     }
 }
+
+// camera model..
+
+class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
+    
+    @Published var isTaken = false
+    
+    @Published var session = AVCaptureSession()
+    
+    @Published var alert = false
+    
+    //since we're going to read pic data..
+    @Published var output = AVCapturePhotoOutput()
+    
+    //preview..
+    @Published var preview : AVCaptureVideoPreviewLayer!
+    
+    //pic data..
+    @Published var isSaved = false
+    
+    @Published var picData = Data(count: 0)
+    
+    func Check(){
+        // first checking camera has got permission..
+        
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized :
+            setUp()
+            return
+            //setting up session
+        case .notDetermined :
+            //retusting for permission..
+            AVCaptureDevice.requestAccess(for: .video) { (status) in
+                if status {
+                    self.setUp()
+                }
+            }
+        case .denied :
+            self.alert.toggle()
+            return
+            
+        default:
+            return
+        }
+    }
+    
+    func setDevice() -> AVCaptureDevice {
+        if let device = AVCaptureDevice.default(.builtInDualCamera,
+                                                for: .video, position: .back) {
+            return device
+        } else if let device = AVCaptureDevice.default(.builtInWideAngleCamera,
+                                                       for: .video, position: .back) {
+            return device
+        } else {
+            fatalError("Missing expected back camera device.")
+        }
+    }
+    
+    func setUp(){
+        
+        // setting up camera..
+        
+        do{
+            
+            // setting configs..
+            self.session.beginConfiguration()
+            
+            
+            //device set
+            let device = setDevice()
+            
+            let input = try AVCaptureDeviceInput(device: device)
+            
+            //checking and adding to session..
+            if self.session.canAddInput(input){
+                self.session.addInput(input)
+            }
+            
+            //same for output...
+            if self.session.canAddOutput(self.output){
+                self.session.addOutput(output)
+            }
+            
+            self.session.commitConfiguration()
+        }
+        catch{
+            print(error.localizedDescription)
+        }
+    }
+    
+    
+    //take and retake functions...
+    
+    func takePic(){
+        
+        DispatchQueue.global(qos: .background).async {
+            
+            self.output.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+            DispatchQueue.main.async {
+                Timer.scheduledTimer(withTimeInterval: 0.1, repeats: false) { (timer) in
+                    self.session.stopRunning()
+                }
+            }
+            DispatchQueue.main.async {
+                withAnimation{self.isTaken.toggle()}
+            }
+        }
+    }
+    
+    func reTake(){
+        DispatchQueue.global(qos: .background).async {
+            //
+            self.session.startRunning()
+            
+            DispatchQueue.main.async {
+                withAnimation{self.isTaken.toggle()}
+            }
+            
+            //clearing..
+            self.isSaved = false
+        }
+    }
+    
+    func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
+        if error != nil{
+            return
+        }
+        print("pic taken...")
+        
+        guard let imageData = photo.fileDataRepresentation() else{return}
+        
+        self.picData = imageData
+    }
+    
+    func savePic(){
+        let image = UIImage(data: self.picData)!
+        
+        //saving image...
+        UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
+        
+        self.isSaved = true
+        
+        print("saved Successfully")
+    }
+}
+
+//setting view for preview..
+struct CameraPreview : UIViewRepresentable {
+    
+    
+    @ObservedObject var camera : CameraModel
+    
+    func makeUIView(context: Context) -> some UIView {
+        let view  = UIView(frame: UIScreen.main.bounds)
+        
+        camera.preview = AVCaptureVideoPreviewLayer(session: camera.session)
+        camera.preview.frame = view.frame
+        
+        //your own property
+        camera.preview.videoGravity = .resizeAspectFill
+        view.layer.addSublayer(camera.preview)
+        
+        //starting session
+        camera.session.startRunning()
+        
+        
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIViewType, context: Context) {
+        //
+    }
+}
+
+
+
+
+
+

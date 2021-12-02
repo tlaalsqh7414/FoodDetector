@@ -7,16 +7,21 @@
 
 import SwiftUI
 import AVFoundation
+import PhotosUI
 
 struct CameraView: View {
     
     @StateObject var camera = CameraModel()
     
+    @State var showImagePicker: Bool = false
+    
+    @State var pickerResult: [UIImage] = []
+    
     var body: some View {
         ZStack{
             //goint to be camera preview..
-            //CameraPreview(camera: camera)
-            Color.black
+            CameraPreview(camera: camera)
+            //Color.black
                 .ignoresSafeArea(.all, edges: .all)
             
             VStack{
@@ -86,7 +91,7 @@ struct CameraView: View {
                             
                             Spacer()
                             //picker
-                            Button(action: {}, label: {
+                            Button(action: {self.showImagePicker = true}, label: {
                                 Image(systemName:"photo.on.rectangle.angled")
                                     .foregroundColor(.black)
                                     .padding()
@@ -94,6 +99,7 @@ struct CameraView: View {
                                     .clipShape(Circle())
                                 
                             })
+                            
                             //.padding(.leading,10)
                             
                         }
@@ -106,6 +112,10 @@ struct CameraView: View {
         .onAppear(perform: {
             camera.Check()
         })
+        .sheet(isPresented: $showImagePicker, content: {
+              let configuration = PHPickerConfiguration(photoLibrary: PHPhotoLibrary.shared())
+              PhotoPicker(configuration: configuration, pickerResult: $pickerResult, isPresented: $showImagePicker)
+            })
     
     }
 }
@@ -293,7 +303,50 @@ struct CameraPreview : UIViewRepresentable {
 }
 
 
+// photo picker
+struct PhotoPicker: UIViewControllerRepresentable {
+    let configuration: PHPickerConfiguration
+    @Binding var pickerResult: [UIImage]
+    @Binding var isPresented: Bool
+    
+  func makeUIViewController(context: Context) -> PHPickerViewController {
+    let controller = PHPickerViewController(configuration: configuration)
+    controller.delegate = context.coordinator
+    return controller
+  }
 
+  func updateUIViewController(_ uiViewController: PHPickerViewController, context: Context) {}
+  func makeCoordinator() -> Coordinator {
+    Coordinator(self)
+  }
+
+  // Use a Coordinator to act as your PHPickerViewControllerDelegate
+  class Coordinator: PHPickerViewControllerDelegate {
+    private let parent: PhotoPicker
+
+    init(_ parent: PhotoPicker) {
+      self.parent = parent
+    }
+
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        print(results)
+        for image in results {
+            if image.itemProvider.canLoadObject(ofClass: UIImage.self)  {
+                image.itemProvider.loadObject(ofClass: UIImage.self) { (newImage, error) in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    } else {
+                        self.parent.pickerResult.append(newImage as! UIImage)
+                    }
+                }
+            } else {
+                print("Loaded Assest is not a Image")
+            }
+        }
+        parent.isPresented = false // Set isPresented to false because picking has finished.
+    }
+  }
+}
 
 
 

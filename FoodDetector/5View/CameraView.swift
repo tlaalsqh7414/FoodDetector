@@ -15,7 +15,8 @@ struct CameraView: View {
     var body: some View {
         ZStack{
             //goint to be camera preview..
-            CameraPreview(camera: camera)
+            //CameraPreview(camera: camera)
+            Color.black
                 .ignoresSafeArea(.all, edges: .all)
             
             VStack{
@@ -64,19 +65,38 @@ struct CameraView: View {
                         
                     }
                     else{
-                        Button(action: camera.takePic, label: {
+                        HStack{
                             
-                            ZStack{
+                            Spacer()
+                            Spacer()
+                            
+                            Button(action: camera.takePic, label: {
                                 
-                                Circle()
-                                    .fill(Color.white)
-                                    .frame(width: 60, height: 60)
+                                ZStack{
+                                    
+                                    Circle()
+                                        .fill(Color.white)
+                                        .frame(width: 60, height: 60)
+                                    
+                                    Circle()
+                                        .stroke(Color.white, lineWidth: 2)
+                                        .frame(width: 70, height: 70)
+                                }
+                            })
+                            
+                            Spacer()
+                            //picker
+                            Button(action: {}, label: {
+                                Image(systemName:"photo.on.rectangle.angled")
+                                    .foregroundColor(.black)
+                                    .padding()
+                                    .background(Color.white)
+                                    .clipShape(Circle())
                                 
-                                Circle()
-                                    .stroke(Color.white, lineWidth: 2)
-                                    .frame(width: 70, height: 70)
-                            }
-                        })
+                            })
+                            //.padding(.leading,10)
+                            
+                        }
                     }
 
                 }

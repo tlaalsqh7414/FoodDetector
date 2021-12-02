@@ -30,7 +30,7 @@ struct CameraView: View {
                                 .foregroundColor(.black)
                                 .padding()
                                 .background(Color.white)
-                                .clipShape(/*@START_MENU_TOKEN@*/Circle()/*@END_MENU_TOKEN@*/)
+                                .clipShape(Circle())
                             
                         })
                         .padding(.leading,10)
@@ -214,7 +214,10 @@ class CameraModel: NSObject, ObservableObject, AVCapturePhotoCaptureDelegate {
             }
             
             //clearing..
-            self.isSaved = false
+            DispatchQueue.main.async {
+                self.isSaved.toggle()
+            }
+            
         }
     }
     

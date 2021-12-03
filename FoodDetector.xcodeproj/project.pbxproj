@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -15,6 +15,7 @@
 		84110273270D4873008FE8DC /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84110271270D4873008FE8DC /* LaunchScreen.storyboard */; };
 		8411027B270D6D5D008FE8DC /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411027A270D6D5D008FE8DC /* HomeView.swift */; };
 		8411027D271096EC008FE8DC /* SignupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411027C271096EC008FE8DC /* SignupView.swift */; };
+		84258A242759A1C50007C26E /* SwiftUICharts in Frameworks */ = {isa = PBXBuildFile; productRef = 84258A232759A1C50007C26E /* SwiftUICharts */; };
 		8493967A27134E8E00814577 /* TabDesignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8493967927134E8E00814577 /* TabDesignView.swift */; };
 		8493967C27135F8100814577 /* AnalyzeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8493967B27135F8100814577 /* AnalyzeView.swift */; };
 		8493967E27135F9E00814577 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8493967D27135F9E00814577 /* CameraView.swift */; };
@@ -45,6 +46,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84258A242759A1C50007C26E /* SwiftUICharts in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -120,6 +122,9 @@
 			dependencies = (
 			);
 			name = FoodDetector;
+			packageProductDependencies = (
+				84258A232759A1C50007C26E /* SwiftUICharts */,
+			);
 			productName = FoodDetector;
 			productReference = 84110263270D486E008FE8DC /* FoodDetector.app */;
 			productType = "com.apple.product-type.application";
@@ -147,6 +152,9 @@
 				Base,
 			);
 			mainGroup = 8411025A270D486E008FE8DC;
+			packageReferences = (
+				84258A222759A1C50007C26E /* XCRemoteSwiftPackageReference "SwiftUICharts" */,
+			);
 			productRefGroup = 84110264270D486E008FE8DC /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -381,6 +389,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		84258A222759A1C50007C26E /* XCRemoteSwiftPackageReference "SwiftUICharts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mecid/SwiftUICharts.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		84258A232759A1C50007C26E /* SwiftUICharts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 84258A222759A1C50007C26E /* XCRemoteSwiftPackageReference "SwiftUICharts" */;
+			productName = SwiftUICharts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 8411025B270D486E008FE8DC /* Project object */;
 }

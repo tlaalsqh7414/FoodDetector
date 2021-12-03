@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct ProfileImg: Codable{
     var img: [String]
 }
@@ -18,10 +17,13 @@ struct ProfileView: View {
     @State var imgList: [String] = []
     @Namespace var animation
     
+    @EnvironmentObject var cv: CommonVar
+    
     let gridlayout = [
-        GridItem(.adaptive(minimum: 100))
+        GridItem(.flexible(minimum: 40), spacing: 1),
+        GridItem(.flexible(minimum: 40), spacing: 1),
+        GridItem(.flexible(minimum: 40), spacing: 1)
     ]
-    let items = Array(1...1000).map({ "Element \($0)" })
     
     var body: some View {
         VStack (){
@@ -54,7 +56,7 @@ struct ProfileView: View {
                     .frame(maxWidth: .infinity)
                     
                     VStack{
-                        Text("10")
+                        Text("\(imgList.count)")
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(.primary)
@@ -131,11 +133,14 @@ struct ProfileView: View {
                 if selectedTab == "square.grid.3x3" {
                     // TODO: 지금까지 올린 식단 Grid 표시
                     ScrollView {
-                        LazyVGrid(columns: gridlayout, content: {
-                            ForEach(items, id: \.self) { item in
-                                Text(item)
-                                    .padding()
+                        LazyVGrid(columns: gridlayout, spacing: 3, content: {
+                            ForEach(imgList, id: \.self) { imgName in
                                 
+                                Image(uiImage: load_img(imgName))
+                                    .resizable()
+                                    .frame(width: 128, height: 128) // iPhone12 기준 - 다른 기종 테스트 안했습니다.
+                                    .clipped()
+                                    
                             }
                         })
                     }
@@ -155,8 +160,8 @@ struct ProfileView: View {
             return
         }
         var request = URLRequest(url: url)
-        let params = try! JSONSerialization.data(withJSONObject: ["id":id, "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Mzg0NTg3MDEsImlkIjoidXNlcjAwMDEifQ.g9jg235iF9pP-EYckmKxIGvNhwMX9ucrizVCFC8D3qw"], options: [])
-        
+        let params = try! JSONSerialization.data(withJSONObject: ["id":id, "token": cv.token], options: [])
+        print("in Profile. token = \(cv.token)")
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = params

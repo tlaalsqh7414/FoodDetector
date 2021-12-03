@@ -18,6 +18,11 @@ struct ProfileView: View {
     @State var imgList: [String] = []
     @Namespace var animation
     
+    let gridlayout = [
+        GridItem(.adaptive(minimum: 100))
+    ]
+    let items = Array(1...1000).map({ "Element \($0)" })
+    
     var body: some View {
         VStack (){
             VStack {
@@ -32,13 +37,13 @@ struct ProfileView: View {
                         .padding(2)
                         .background(Color.white)
                         .clipShape(Circle())
-                    /*
                         .onAppear(perform: {
                             get_imgs_list("user0001")
+                            print(imgList)
                         })
-                    */
+                    
                     VStack{
-                        Text("199")
+                        Text("0")
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(.primary)
@@ -49,7 +54,7 @@ struct ProfileView: View {
                     .frame(maxWidth: .infinity)
                     
                     VStack{
-                        Text("13")
+                        Text("10")
                             .font(.title2)
                             .fontWeight(.bold)
                             .foregroundColor(.primary)
@@ -125,6 +130,15 @@ struct ProfileView: View {
             ScrollView(.vertical, showsIndicators: false, content: {
                 if selectedTab == "square.grid.3x3" {
                     // TODO: 지금까지 올린 식단 Grid 표시
+                    ScrollView {
+                        LazyVGrid(columns: gridlayout, content: {
+                            ForEach(items, id: \.self) { item in
+                                Text(item)
+                                    .padding()
+                                
+                            }
+                        })
+                    }
                 }
                 else{
                     Text("Select2")
@@ -141,7 +155,7 @@ struct ProfileView: View {
             return
         }
         var request = URLRequest(url: url)
-        let params = try! JSONSerialization.data(withJSONObject: ["id":id], options: [])
+        let params = try! JSONSerialization.data(withJSONObject: ["id":id, "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2Mzg0NTg3MDEsImlkIjoidXNlcjAwMDEifQ.g9jg235iF9pP-EYckmKxIGvNhwMX9ucrizVCFC8D3qw"], options: [])
         
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 extension Color {
     static let lightgray = Color("lightgray")
@@ -27,6 +28,8 @@ var dataPoints: [DataPoint] = [
 ]
 
 var barMaxWidth: CGFloat = 250
+
+var curDate: Date = Date()
 
 struct HomeView: View {
     private let calendar: Calendar
@@ -51,7 +54,10 @@ struct HomeView: View {
                 calendar: calendar,
                 date: $selectedDate,
                 content: { date in
-                    Button(action: { selectedDate = date }) {
+                    Button(action: {
+                        selectedDate = date
+                        curDate = date
+                    }) {
                         Text("00")
                             .font(.system(size: 6))
                             .padding(8)
@@ -98,6 +104,7 @@ struct HomeView: View {
                         ) else { return }
                         
                         selectedDate = newDate
+                        curDate = newDate
                     } label: {
                         Label(
                             title: { Text ("Previous") },
@@ -115,6 +122,7 @@ struct HomeView: View {
                         ) else { return }
                         
                         selectedDate = newDate
+                        curDate = newDate
                     } label: {
                         Label(
                             title: { Text("Next") },
@@ -128,7 +136,7 @@ struct HomeView: View {
             ).padding(.bottom, 10)
             DailyNutritionView()
                 .padding(.bottom, 10)
-            ImageScrollView()
+            ImageScrollView(date: selectedDate)
         }
     }
 }
@@ -279,7 +287,7 @@ public struct DailyNutritionView: View {
 
 struct ImageScrollView: View {
     @State var imgList: [String] = []
-
+    @State var date: Date
     @EnvironmentObject var cv: CommonVar
     
     var body: some View {
@@ -297,17 +305,26 @@ struct ImageScrollView: View {
                     }
         )
         .onAppear(perform: {
-            get_imgs_list("user0001")
+            get_imgs_list("user0001", date)
+        })
+        .onReceive(Just(date), perform: { d in
+            //print("d is \(d), and date is \(date)")
+            //print("And!!!  curDate is \(curDate)")
+            date = curDate
+            get_imgs_list("user0001", date)
         })
     }
     
-    func get_imgs_list(_ id: String) {
+    func get_imgs_list(_ id: String, _ date: Date) {
         guard let url = URL(string: "http://3.36.103.81:80/account/profile_meal") else {
             print("Invalid url")
             return
         }
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
         var request = URLRequest(url: url)
-        let params = try! JSONSerialization.data(withJSONObject: ["id":id, "token": cv.token], options: [])
+        let params = try! JSONSerialization.data(withJSONObject: ["id":id, "token": cv.token, "date": dateFormatter.string(from: date)], options: [])
         print("in Home. token = \(cv.token)")
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")

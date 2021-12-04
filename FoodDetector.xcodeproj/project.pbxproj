@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		21FFB055275B567E00A940F6 /* DataPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFB054275B567E00A940F6 /* DataPoint.swift */; };
 		84110267270D486E008FE8DC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84110266270D486E008FE8DC /* AppDelegate.swift */; };
 		84110269270D486E008FE8DC /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84110268270D486E008FE8DC /* SceneDelegate.swift */; };
 		8411026B270D486E008FE8DC /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8411026A270D486E008FE8DC /* ContentView.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		21FFB054275B567E00A940F6 /* DataPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataPoint.swift; sourceTree = "<group>"; };
 		84110263270D486E008FE8DC /* FoodDetector.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FoodDetector.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84110266270D486E008FE8DC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84110268270D486E008FE8DC /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -53,6 +55,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		21FFB052275B565500A940F6 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				21FFB054275B567E00A940F6 /* DataPoint.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		8411025A270D486E008FE8DC = {
 			isa = PBXGroup;
 			children = (
@@ -72,6 +82,7 @@
 		84110265270D486E008FE8DC /* FoodDetector */ = {
 			isa = PBXGroup;
 			children = (
+				21FFB052275B565500A940F6 /* Model */,
 				8493968327135FED00814577 /* 5View */,
 				84110266270D486E008FE8DC /* AppDelegate.swift */,
 				84110268270D486E008FE8DC /* SceneDelegate.swift */,
@@ -187,6 +198,7 @@
 				8493968227135FDB00814577 /* ProfileView.swift in Sources */,
 				8493967A27134E8E00814577 /* TabDesignView.swift in Sources */,
 				84110269270D486E008FE8DC /* SceneDelegate.swift in Sources */,
+				21FFB055275B567E00A940F6 /* DataPoint.swift in Sources */,
 				8493967C27135F8100814577 /* AnalyzeView.swift in Sources */,
 				8493968027135FC800814577 /* CommunityView.swift in Sources */,
 				8411026B270D486E008FE8DC /* ContentView.swift in Sources */,
@@ -335,6 +347,7 @@
 				DEVELOPMENT_TEAM = 3Y3Z2Z567H;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = FoodDetector/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -356,6 +369,7 @@
 				DEVELOPMENT_TEAM = 3Y3Z2Z567H;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = FoodDetector/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

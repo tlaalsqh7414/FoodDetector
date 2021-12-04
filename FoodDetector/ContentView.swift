@@ -71,6 +71,9 @@ struct ContentView: View {
                 .navigationBarHidden(true)
             } // End VStack
             .padding()
+            .onAppear() {
+                UITabBar.appearance().barTintColor = .white
+            }
         }
     }
     

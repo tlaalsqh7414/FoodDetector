@@ -9,36 +9,39 @@ import SwiftUI
 
 struct TabDesignView: View {
     var body: some View {
-        TabView{
+        TabView {
             HomeView(calendar: Calendar(identifier: .gregorian))
                 .tabItem{
-                    Text("HOME")
+                    Text("홈")
                     Image(systemName: "house")
                 }
                 .navigationBarHidden(true)
             AnalyzeView()
                 .tabItem{
-                    Text("ANALYZE")
+                    Text("분석")
                     Image(systemName: "doc.text.below.ecg")
                 }
                 .navigationBarHidden(true)
             CameraView()
                 .tabItem{
-                    Text("CAMERA")
+                    Text("촬영")
                     Image(systemName: "camera")
                 }
                 .navigationBarHidden(true)
             CommunityView()
                 .tabItem{
-                    Text("COMMUNITY")
+                    Text("커뮤니티")
                     Image(systemName: "person.2.circle")
                 }
                 .navigationBarHidden(true)
             ProfileView()
                 .tabItem{
-                    Text("PROFILE")
+                    Text("프로필")
                     Image(systemName: "person.circle")}
                 .navigationBarHidden(true)
+        }
+        .onAppear() {
+            UITabBar.appearance().barTintColor = .white
         }
         .navigationBarHidden(true)
         .navigationBarBackButtonHidden(true)

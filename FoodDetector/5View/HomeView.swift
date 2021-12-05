@@ -12,6 +12,15 @@ extension Color {
     static let lightgray = Color("lightgray")
 }
 
+struct UserDateInfo: Codable{
+    var infoList: [[String: Int]]
+    var infoNum: Int
+    var user_calorie: Int
+    var user_carbo: Int
+    var user_fat: Int
+    var user_protein: Int
+}
+
 // data declaration
 var calorie = Legend(color: .red, label: "총 칼로리")
 var carbon = Legend(color: .green, label: "탄수화물")
@@ -134,7 +143,7 @@ struct HomeView: View {
                     .offset(x: 10, y: -5)
                 }
             ).padding(.bottom, 10)
-            DailyNutritionView()
+            DailyNutritionView(date: selectedDate)
                 .padding(.bottom, 10)
             ImageScrollView(date: selectedDate)
         }
@@ -254,6 +263,9 @@ private extension DateFormatter {
 
 public struct DailyNutritionView: View {
     
+    @State var date: Date
+    @State var total: [Double] = [0.0,0.0,0.0,0.0]
+    @State var isModified = false
     private var max: Double {
         guard let max = dataPoints.max()?.endValue, max != 0 else {
             return 1
@@ -282,6 +294,66 @@ public struct DailyNutritionView: View {
                 }
             }
         }
+        /*
+        .onAppear(perform: {
+            get_user_info("user0001", date)
+            dataPoints[0] = DataPoint(value: total[0]/1700, legend: calorie)
+            dataPoints[1] = DataPoint(value: total[1]/100, legend: carbon)
+            dataPoints[2] = DataPoint(value: total[2]/50, legend: protein)
+            dataPoints[3] = DataPoint(value: total[3]/40, legend: fat)
+        })
+        */
+        .onReceive(Just(isModified), perform: { d in
+            
+            if date != curDate{
+                date = curDate
+                isModified = false
+            }
+            if !isModified{
+                get_user_info("user0001", curDate)
+            }
+            
+            dataPoints[0] = DataPoint(value: total[0]/2000, legend: calorie)
+            dataPoints[1] = DataPoint(value: total[1]/140, legend: carbon)
+            dataPoints[2] = DataPoint(value: total[2]/50, legend: protein)
+            dataPoints[3] = DataPoint(value: total[3]/50, legend: fat)
+        })
+         
+    }
+    
+    func get_user_info(_ id: String, _ date: Date) {
+        guard let url = URL(string: "http://3.36.103.81:80/account/user_date_info") else {
+            print("Invalid url")
+            return
+        }
+        print("get_user_info called. date is \(date) \(isModified)")
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        var request = URLRequest(url: url)
+        let params = try! JSONSerialization.data(withJSONObject: ["id":id, "date": dateFormatter.string(from: date)], options: [])
+
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = params
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            let result = try! JSONDecoder().decode(UserDateInfo.self, from: data!)
+            total = [0.0, 0.0, 0.0, 0.0]
+            for r in result.infoList {
+                print("r is  \(r)")
+                total[0] += Double(r["calories_total"] ?? 0)
+                total[1] += Double(r["carbo_total"] ?? 0)
+                total[2] += Double(r["fat_total"] ?? 0)
+                total[3] += Double(r["protein_total"] ?? 0)
+            }
+            
+            dataPoints[0] = DataPoint(value: total[0]/2000, legend: calorie)
+            dataPoints[1] = DataPoint(value: total[1]/140, legend: carbon)
+            dataPoints[2] = DataPoint(value: total[2]/50, legend: protein)
+            dataPoints[3] = DataPoint(value: total[3]/50, legend: fat)
+            isModified = true
+        }.resume()
     }
 }
 
@@ -310,8 +382,8 @@ struct ImageScrollView: View {
         .onReceive(Just(date), perform: { d in
             //print("d is \(d), and date is \(date)")
             //print("And!!!  curDate is \(curDate)")
-            date = curDate
-            get_imgs_list("user0001", date)
+            //date = curDate
+            get_imgs_list("user0001", curDate)
         })
     }
     
